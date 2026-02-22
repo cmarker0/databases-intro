@@ -32,20 +32,10 @@ jobs:
       - name: Export slides to PDF
         run: npm run export -- --output slides.pdf
 
-      - name: Upload PDF as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: slides-pdf
-          path: slides.pdf
-          retention-days: 30
-
-      - name: Create GitHub Release with PDF
-        if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: slides-${{ github.sha }}
-          name: Slides – ${{ github.sha }}
-          files: slides.pdf
-          generate_release_notes: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit PDF to repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add slides.pdf
+          git diff --cached --quiet || git commit -m "chore: update slides.pdf [skip ci]"
+          git push
