@@ -1,0 +1,51 @@
+name: Export slides to PDF
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "slides.md"
+      - "package.json"
+      - "package-lock.json"
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium --with-deps
+
+      - name: Export slides to PDF
+        run: npm run export -- --output slides.pdf
+
+      - name: Upload PDF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: slides-pdf
+          path: slides.pdf
+          retention-days: 30
+
+      - name: Create GitHub Release with PDF
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: slides-${{ github.sha }}
+          name: Slides – ${{ github.sha }}
+          files: slides.pdf
+          generate_release_notes: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
