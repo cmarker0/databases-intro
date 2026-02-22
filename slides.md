@@ -1,5 +1,6 @@
 ---
 theme: default
+colorSchema: dark
 title: Introduksjon til Databaser
 info: |
   ## Introduksjon til Databaser
