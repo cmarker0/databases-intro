@@ -748,7 +748,7 @@ WHERE User.Name = 'Kari Nordmann';
 layout: center
 ---
 
-# Flere oppgaver i `oppgaver.md` frem til lunsj
+# Flere oppgaver i `databaser-1.md` frem til lunsj
 
 ---
 layout: center
@@ -1057,3 +1057,9 @@ await db.SaveChangesAsync();
 
 </div>
 </div>
+
+---
+layout: center
+---
+
+# Flere oppgaver i `databaser-2.md` ut dagen
