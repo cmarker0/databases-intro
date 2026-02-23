@@ -1,39 +1,81 @@
 * {
-  font-variant-ligatures: none;
+	font-variant-ligatures: none;
 }
 
+:root {
+	--green: 20, 83, 45;
+	--green-text: rgb(187, 247, 208);
+	--blue: 30, 58, 138;
+	--blue-text: rgb(191, 219, 254);
+	--purple: 59, 7, 100;
+	--purple-text: rgb(233, 213, 255);
+	--yellow: 113, 63, 18;
+	--yellow-text: rgb(254, 240, 138);
+
+	--code-bg: rgb(30, 30, 30);
+	--code-border: rgb(60, 60, 60);
+	--code-text: rgb(212, 212, 212);
+}
+
+:not(pre)>code {
+	background-color: var(--code-bg) !important;
+	border: 1px solid var(--code-border) !important;
+	color: var(--code-text) !important;
+}
+
+pre {
+	background-color: var(--code-bg) !important;
+	border: 1px solid var(--code-border) !important;
+}
 
 .info-block {
-  margin-top: 1rem;
-  padding: 0 1rem;
-  border-radius: 0.5rem;
-  display: inline-block;
+	margin-top: 1rem;
+	padding: 0 1rem;
+	border-radius: 0.5rem;
+	display: inline-block;
 }
 
 .info-block code {
 	padding: 0.1em 0.35em !important;
 	border-radius: 0.25rem !important;
 	font-weight: 700 !important;
-  background-color: rgb(0 0 0 / 0.1) !important;
-  color: inherit !important;
+	background-color: rgba(0, 0, 0, 0.3) !important;
+	border: 1px solid var(--info-block-color) !important;
+	color: inherit !important;
 }
 
 .info-block.green {
-  background-color: #14532d;
-  color: #bbf7d0;
+	--info-block-color: rgba(var(--green), 1);
+	background-color: rgba(var(--green), 0.5);
+	border: 1px solid var(--info-block-color);
+	color: var(--green-text);
 }
 
 .info-block.blue {
-  background-color: #1e3a8a;
-  color: #bfdbfe;
+	--info-block-color: rgba(var(--blue), 1);
+	background-color: rgba(var(--blue), 0.5);
+	border: 1px solid var(--info-block-color);
+	color: var(--blue-text);
 }
 
 .info-block.purple {
-  background-color: #3b0764;
-  color: #e9d5ff;
+	--info-block-color: rgba(var(--purple), 1);
+	background-color: rgba(var(--purple), 0.5);
+	border: 1px solid var(--info-block-color);
+	color: var(--purple-text);
 }
 
 .info-block.yellow {
-  background-color: #713f12;
-  color: #fef08a;
+	--info-block-color: rgba(var(--yellow), 1);
+	background-color: rgba(var(--yellow), 0.5);
+	border: 1px solid var(--info-block-color);
+	color: var(--yellow-text);
+}
+
+.slidev-layout.text-sm pre,
+.slidev-layout.text-sm pre code,
+.slidev-page.text-sm pre,
+.slidev-page.text-sm pre code {
+	font-size: 0.65rem !important;
+	line-height: 1.5 !important;
 }
