@@ -5,7 +5,6 @@ title: Introduksjon til Databaser
 highlighter: shiki
 drawings:
   persist: false
-transition: slide-left
 mdc: true
 fonts:
   sans: JetBrains Mono
@@ -830,6 +829,7 @@ class: text-sm
 // Configure Post entity
 modelBuilder.Entity<Post>(entity =>
 {
+    // Define primary key
     entity.HasKey(e => e.Id);
 
     // Configure the relationship: Post has many Comments
@@ -852,16 +852,16 @@ Vi trenger bare å definere relasjoner eksplisitt.
 EF Core oppdager enkle kolonner som `Title` og `Content` automatisk basert på C#-klassen.
 
 ---
-layout: default
-class: text-sm
+layout: center
 ---
 
-# Databaser i .NET (3/4) - Oppgave
-<div>
+# Oppgave 3 *(5-10 minutter)*
 
-**Oppgave**: Fullfør `OnModelCreating`-metoden i `ApplicationDbContext`. (5-10 minutter)
+<div class="mt-8">
 
-- Definer databasetabellene for `User` og `Comment` på samme måte som `Post`.
+Fullfør `OnModelCreating`-metoden i `ApplicationDbContext`.
+
+Definer databasetabellene for `User` og `Comment` på samme måte som `Post`.
 
 </div>
 
@@ -931,25 +931,24 @@ class: text-sm
 
 # Entity Framework: Modeller og migrasjoner
 
-**5. Definer modellene dine som C#-klasser**
+**5. Liten endring i `BaseEntity`**:
 
-```csharp
-public class Post
+```csharp {all|6}
+public class BaseEntity
 {
     public int Id { get; set; }
-    public string Title { get; set; } = "";
-    public string Content { get; set; } = "";
+    public string? Content { get; set; }
     public DateTime CreatedAt { get; set; }
-    public int AuthorId { get; set; }
-    public User Author { get; set; } = null!;
+    public string AuthorId { get; set; } = string.Empty;
+    public required User Author { get; set; }
 }
 ```
 
 **6. Opprett og kjør migrasjoner**
 
 ```bash
-dotnet ef migrations add InitialCreate
-dotnet ef database update
+dotnet ef migrations add InitialCreate --project MiniReddit
+dotnet ef database update --project MiniReddit
 ```
 
 <div class="info-block yellow">
