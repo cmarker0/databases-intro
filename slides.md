@@ -11,17 +11,12 @@ drawings:
   persist: false
 transition: slide-left
 mdc: true
+fonts:
+  sans: JetBrains Mono
+  mono: JetBrains Mono
 ---
 
 # Introduksjon til Databaser
-
-Grunnleggende konsepter for deg som er ny til databaser
-
-<div class="pt-12">
-  <span class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    La oss begynne! 🗄️
-  </span>
-</div>
 
 ---
 layout: default
@@ -29,15 +24,14 @@ layout: default
 
 # Hva skal vi lære i dag?
 
-<v-clicks>
 
 - 📋 **Tabeller** – Grunnsteinen i en database
 - 🔤 **Kolonnetyper** – Hvilke typer data kan vi lagre?
 - 🔗 **Relasjoner** – Hvordan henger data sammen?
 - 🔑 **Primær- og fremmednøkler** – Kobling mellom tabeller
-- 🔍 **INNER JOIN** – Hente data fra flere tabeller samtidig
-
-</v-clicks>
+- 🔍 **SELECT** – Hente og filtrere data
+- 🔗 **INNER JOIN** – Hente data fra flere tabeller samtidig
+- ✏️ **Oppgaver** – Opprette tabeller og skrive spørringer
 
 ---
 layout: section
@@ -58,19 +52,17 @@ En tabell er den grunnleggende strukturen for å lagre data i en database.
 
 **En tabell består av:**
 
-<v-clicks>
-
-- **Rader** (også kalt poster/records) – én enhet av data
-- **Kolonner** (også kalt felt/fields) – en egenskap ved dataene
+- **Rader** – én enhet av data
+- **Kolonner** – en egenskap ved dataene
 - **Celler** – verdien der en rad og kolonne møtes
-
-</v-clicks>
 
 </div>
 <div class="mt-2">
+<div class="info-block blue">
 
-Tenk på en tabell som et **Excel-ark** – men med strenge regler for hva slags data som kan legges inn!
+💡 Tenk på en tabell som et **Excel-ark** – men med strenge regler for hva slags data som kan legges inn!
 
+</div>
 </div>
 </div>
 
@@ -115,51 +107,66 @@ layout: default
 
 Hver kolonne i en tabell må ha en **datatype** som bestemmer hva slags verdier som kan lagres der.
 
-<v-clicks>
-
 Dette er viktig fordi det:
 - Sikrer at riktig type data lagres
 - Gjør databasen mer effektiv
 - Forhindrer feil (f.eks. tekst der det skal være tall)
 
-</v-clicks>
-
 ---
 layout: default
 ---
 
-# Vanlige kolonnetyper
+# Vanlige kolonnetyper (1/2)
 
 <div class="grid grid-cols-2 gap-6 mt-4">
 <div>
 
 **Tekst**
+
 | Type | Beskrivelse |
-|------|-------------|
+| ------ | ------------- |
 | `CHAR(n)` | Fast lengde tekst |
 | `VARCHAR(n)` | Variabel lengde tekst (maks n tegn) |
 | `TEXT` | Ubegrenset tekst |
 
+</div>
+<div>
+
 **Tall**
+
 | Type | Beskrivelse |
-|------|-------------|
+| ------ | -------------|
 | `INTEGER` | Heltall (…-1, 0, 1, 2…) |
 | `DECIMAL(p,s)` | Desimaltall med presisjon |
 | `FLOAT` | Flyttall |
 
 </div>
+</div>
+
+---
+layout: default
+---
+
+# Vanlige kolonnetyper (2/2)
+
+<div class="grid grid-cols-2 gap-6 mt-4">
 <div>
 
 **Dato og tid**
+
 | Type | Beskrivelse |
-|------|-------------|
+| ------ | ------------- |
 | `DATE` | Dato (YYYY-MM-DD) |
 | `TIME` | Klokkeslett |
 | `DATETIME` | Dato og tid kombinert |
 
+</div>
+<div>
+
 **Andre**
+
 | Type | Beskrivelse |
-|------|-------------|
+| ------ | ------------- |
 | `BOOLEAN` | Sann/Usann |
 | `NULL` | Ingen verdi / ukjent |
 
@@ -183,9 +190,9 @@ CREATE TABLE produkter (
 );
 ```
 
-<div class="mt-6 p-4 bg-blue-50 rounded-lg text-blue-900">
+<div class="info-block green">
 
-💡 **Tips:** Velg alltid den typen som passer best til dataene dine. Bruk ikke `TEXT` når `VARCHAR(50)` holder, og ikke `FLOAT` til pengebeløp (bruk `DECIMAL` for å unngå avrundingsfeil!).
+💡 **NB:** I systemer med begrenset lagringskapasitet er det viktig å velge rett type på teskt-verdiene. Men i det daglige så vil det være nok med `TEXT`.
 
 </div>
 
@@ -199,25 +206,28 @@ layout: section
 layout: default
 ---
 
-# Hva er relasjoner?
+# Hva er relasjoner? (1/2)
 
-En relasjonsdatabase lar oss koble tabeller sammen slik at vi unngår å gjenta de samme dataene mange ganger.
-
-<div class="grid grid-cols-2 gap-8 mt-6">
-<div>
+En relasjonsdatabase lar oss koble tabeller sammen slik at vi unngår å gjenta de samme dataene mange ganger. Dette kalles **normalisering**.
 
 **Uten relasjoner (dårlig):**
 
 | ordre_id | kunde_navn | kunde_epost       | vare    |
-|----------|------------|-------------------|---------|
+| -------- | ---------- | ----------------- | ------- |
 | 1        | Kari N.    | kari@skole.no     | Bok     |
 | 2        | Kari N.    | kari@skole.no     | Penn    |
 | 3        | Ola H.     | ola@skole.no      | Linjal  |
 
-</div>
-<div>
+Data om Kari gjentas på hver rad - dette er sløsing og kan gi inkonsistens.
 
-**Med relasjoner (bra):**
+---
+layout: default
+---
+
+# Hva er relasjoner? (2/2)
+
+<div class="grid grid-cols-3 gap-6 mt-4">
+<div>
 
 Tabell: `kunder`
 
@@ -226,13 +236,27 @@ Tabell: `kunder`
 | 1  | Kari N.| kari@skole.no |
 | 2  | Ola H. | ola@skole.no  |
 
+</div>
+<div>
+
+Tabell: `produkter`
+
+| id | navn   | pris  |
+|----|--------|-------|
+| 1  | Bok    | 99    |
+| 2  | Penn   | 15    |
+| 3  | Linjal | 25    |
+
+</div>
+<div>
+
 Tabell: `ordrer`
 
-| id | kunde_id | vare   |
-|----|----------|--------|
-| 1  | 1        | Bok    |
-| 2  | 1        | Penn   |
-| 3  | 2        | Linjal |
+| id | kunde_id | produkt_id |
+|----|----------|------------|
+| 1  | 1        | 1          |
+| 2  | 1        | 2          |
+| 3  | 2        | 3          |
 
 </div>
 </div>
@@ -251,9 +275,9 @@ layout: default
 
 En **primærnøkkel** er en kolonne (eller kombinasjon av kolonner) som **unikt identifiserer** hver rad i en tabell.
 
-```sql {all|3}
+```sql {all|2}
 CREATE TABLE studenter (
-    id        INTEGER     PRIMARY KEY,  -- primærnøkkel!
+    id        INTEGER     PRIMARY KEY AUTO_INCREMENT,  -- primærnøkkel!
     fornavn   VARCHAR(50) NOT NULL,
     etternavn VARCHAR(50) NOT NULL,
     epost     VARCHAR(100)
@@ -264,14 +288,10 @@ CREATE TABLE studenter (
 
 **Regler for primærnøkler:**
 
-<v-clicks>
-
 - Må være **unik** – ingen to rader kan ha samme verdi
 - Kan **ikke** være `NULL` (tom/ukjent)
-- Hver tabell bør ha **én** primærnøkkel
+- Hver tabell bør ha minst **én** primærnøkkel
 - Ofte brukes et automatisk incrementerende tall: `SERIAL` / `AUTO_INCREMENT`
-
-</v-clicks>
 
 </div>
 
@@ -283,7 +303,7 @@ layout: default
 
 En **fremmednøkkel** er en kolonne som refererer til primærnøkkelen i en annen tabell – og skaper dermed en kobling mellom tabellene.
 
-```sql {all|4,8-9}
+```sql {all|2,9}
 CREATE TABLE klasser (
     id    INTEGER     PRIMARY KEY,
     navn  VARCHAR(50) NOT NULL
@@ -296,9 +316,9 @@ CREATE TABLE studenter (
 );
 ```
 
-<div class="mt-4 p-4 bg-green-50 rounded-lg text-green-900">
+<div class="info-block green">
 
-🔗 `klasse_id` i `studenter`-tabellen peker på `id` i `klasser`-tabellen. Databasen sørger for at du ikke kan legge inn en `klasse_id` som ikke finnes!
+🔗 <code>klasse_id</code> i `studenter`-tabellen peker på `id` i `klasser`-tabellen. Databasen sørger for at du ikke kan legge inn en `klasse_id` som ikke finnes!
 
 </div>
 
@@ -333,11 +353,186 @@ layout: default
 </div>
 </div>
 
-<div class="mt-8 text-center text-gray-600">
+<div class="mt-8 text-center">
 
 `studenter.klasse_id` → `klasser.id`
 
 Kari og Ola går i klasse **1A**, Ingrid går i klasse **1B**
+
+</div>
+
+---
+layout: default
+---
+
+# Oppsummering
+
+<div class="grid grid-cols-2 gap-6 mt-4">
+<div>
+
+📋 **Tabeller**
+Grunnstrukturen i en database. Rader = poster, kolonner = egenskaper.
+
+🔤 **Kolonnetyper**
+Hver kolonne har en type: `INTEGER`, `VARCHAR`, `DATE`, `BOOLEAN`, osv.
+
+🔗 **Relasjoner**
+Unngå å gjenta data – koble tabeller i stedet for å duplisere informasjon.
+
+</div>
+<div>
+
+🔑 **Primærnøkkel**
+Unik identifikator for hver rad i en tabell. Kan ikke være `NULL`.
+
+🔗 **Fremmednøkkel**
+Refererer til en primærnøkkel i en annen tabell og skaper en kobling.
+
+</div>
+</div>
+
+---
+layout: center
+---
+
+# Oppgave 1 *(5 minutter)*
+
+<div class="mt-8">
+
+I deres prosjekt har dere følgende tabeller `Post`, `Comment` og `User`.
+
+Skriv SQL-spørringer som oppretter disse tabellene.
+
+
+<div>
+
+| **Post**    | **Comment** | **User** |
+| ----------- | ---------   |--------- |
+| Id          | Id          | Id       |
+| Content     | Content     | Name     |
+| CreatedAt   | CreatedAt   |          |
+| Author      | Author      |          |
+| Title       | PostId      |          |
+| Comments    |             |          |
+
+</div>
+</div>
+
+---
+layout: default
+---
+
+# Løsningsforslag: Oppgave 1
+
+```sql
+CREATE TABLE User (
+    Id        INTEGER       PRIMARY KEY,
+    Name      TEXT          NOT NULL
+);
+
+CREATE TABLE Post (
+    Id        INTEGER       PRIMARY KEY,
+    Content   TEXT          NOT NULL,
+    CreatedAt DATE          NOT NULL,
+    Author    INTEGER       NOT NULL REFERENCES User(Id),
+    Title     TEXT          NOT NULL
+);
+
+CREATE TABLE Comment (
+    Id        INTEGER       PRIMARY KEY,
+    Content   TEXT          NOT NULL,
+    CreatedAt DATE          NOT NULL,
+    Author    INTEGER       NOT NULL REFERENCES User(Id),
+    PostId    INTEGER       NOT NULL REFERENCES Post(Id)
+);
+```
+
+---
+layout: section
+---
+
+# Hente data med SELECT
+
+---
+layout: default
+---
+
+# SELECT – grunnleggende syntaks
+
+`SELECT` brukes til å hente data fra en tabell.<br/>For å hente alle kolonner bruker man `*`
+
+```sql
+SELECT *
+FROM studenter;
+```
+
+
+<div class="mt-6">
+
+**Resultat:**
+
+| id | fornavn | etternavn | epost           | fodselsar |
+|----|---------|-----------|-----------------|-----------|
+| 1  | Kari    | Nordmann  | kari@skole.no   | 2005      |
+| 2  | Ola     | Hansen    | ola@skole.no    | 2004      |
+| 3  | Ingrid  | Berg      | ingrid@skole.no | 2005      |
+
+</div>
+
+---
+layout: default
+---
+
+# SELECT – filtrere med WHERE
+
+`WHERE` lar deg filtrere hvilke rader som returneres.
+
+```sql
+SELECT fornavn, etternavn, fodselsar
+FROM studenter
+WHERE fodselsar = 2005;
+```
+
+<div class="mt-6">
+
+**Resultat:**
+
+| fornavn | etternavn | fodselsar |
+|---------|-----------| ----------|
+| Kari    | Nordmann  | 2005      |
+| Ingrid  | Berg      | 2005      |
+
+</div>
+
+<div class="info-block blue">
+
+💡 Du kan kombinere betingelser med `AND` og `OR`, og bruke operatorer som `=`, `>`, `<`, `!=`, `LIKE`.
+
+</div>
+
+---
+layout: default
+---
+
+# SELECT – sortere og begrense
+
+`ORDER BY` sorterer resultatet, `LIMIT` begrenser antall rader.
+
+```sql
+SELECT fornavn, etternavn, fodselsar
+FROM studenter
+ORDER BY fodselsar DESC
+LIMIT 2;
+```
+
+<div class="mt-6">
+
+**Resultat (nyeste først, maks 2 rader):**
+
+| fornavn | etternavn | fodselsar |
+|---------|-----------|-----------|
+| Kari    | Nordmann  | 2005      |
+| Ingrid  | Berg      | 2005      |
 
 </div>
 
@@ -365,7 +560,7 @@ INNER JOIN tabell2 ON tabell1.nokkel = tabell2.nokkel;
 
 </div>
 
-<div class="mt-6 p-4 bg-purple-50 rounded-lg text-purple-900">
+<div class="info-block purple">
 
 🔍 `INNER JOIN` returnerer **kun rader der det finnes en match i begge tabeller**. Rader uten kobling blir utelatt.
 
@@ -427,11 +622,11 @@ layout: default
 
 **klasser**
 
-| id  | navn |
-|-----|------|
-| **1** | 1A |
-| **2** | 1B |
-| 3   | 2A ❌ |
+| id    | navn   |
+| ----- | ------ |
+| **1** | 1A     |
+| **2** | 1B     |
+| 3     | 2A ❌  |
 
 </div>
 
@@ -471,74 +666,55 @@ INNER JOIN klasser ON studenter.klasse_id = klasser.id
 INNER JOIN laerere ON klasser.laerer_id   = laerere.id;
 ```
 
-<div class="mt-4 p-4 bg-yellow-50 rounded-lg text-yellow-900">
+<div class="info-block yellow">
 
 💡 Du kan lenke så mange `INNER JOIN` som du trenger – bare sørg for at du alltid kobler via nøklene!
 
 </div>
 
 ---
-layout: default
----
-
-# Oppsummering
-
-<div class="grid grid-cols-2 gap-6 mt-4">
-<div>
-
-<v-clicks>
-
-📋 **Tabeller**
-Grunnstrukturen i en database. Rader = poster, kolonner = egenskaper.
-
-🔤 **Kolonnetyper**
-Hver kolonne har en type: `INTEGER`, `VARCHAR`, `DATE`, `BOOLEAN`, osv.
-
-🔗 **Relasjoner**
-Unngå å gjenta data – koble tabeller i stedet for å duplisere informasjon.
-
-</v-clicks>
-
-</div>
-<div>
-
-<v-clicks>
-
-🔑 **Primærnøkkel**
-Unik identifikator for hver rad i en tabell. Kan ikke være `NULL`.
-
-🔗 **Fremmednøkkel**
-Refererer til en primærnøkkel i en annen tabell og skaper en kobling.
-
-🔍 **INNER JOIN**
-Henter rader fra to eller flere tabeller der det finnes match på nøklene.
-
-</v-clicks>
-
-</div>
-</div>
-
----
 layout: center
-class: text-center
 ---
 
-# Spørsmål?
+# Oppgave 2!
 
-<div class="mt-8 text-gray-500">
+<div class="mt-8">
 
-Prøv gjerne å lage din egen database med tabeller, nøkler og JOIN-spørringer!
+Bruk tabellene du opprettet i forrige oppgave (`Post`, `Comment`, `User`).
 
-</div>
+Skriv en SQL-spørring som henter ut **alle poster skrevet av en bestemt bruker**, inkludert brukerens navn.
 
 <div class="mt-6">
 
-```sql
--- Kom i gang med din første tabell!
-CREATE TABLE mine_data (
-    id    INTEGER PRIMARY KEY,
-    navn  VARCHAR(100) NOT NULL
-);
-```
+**💡 Tips:**
+- Bruk `SELECT` for å velge hvilke kolonner du vil ha med
+- Bruk `INNER JOIN` for å koble `Post` og `User`
+- Bruk `WHERE` for å filtrere på en bestemt bruker
 
 </div>
+</div>
+
+---
+layout: default
+---
+
+# Løsningsforslag: Oppgave 2
+
+```sql
+SELECT *
+ -- Eller spesifikt:
+SELECT
+    Post.Title,
+    Post.Content,
+    Post.CreatedAt,
+    User.Name
+FROM Post
+INNER JOIN User ON Post.Author = User.Id
+WHERE User.Name = 'Kari Nordmann';
+```
+
+---
+layout: center
+---
+
+# Flere oppgaver i `oppgaver.md` frem til lunsj.

@@ -1,17 +1,18 @@
 {
-  "name": "databases-intro",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "build": "slidev build",
-    "dev": "slidev --open",
-    "export": "slidev export"
-  },
-  "dependencies": {
-    "@slidev/cli": "^51.6.0",
-    "@slidev/theme-default": "latest"
-  },
-  "devDependencies": {
-    "playwright-chromium": "latest"
-  }
+	"name": "databases-intro",
+	"type": "module",
+	"private": true,
+	"packageManager": "pnpm@10.30.0",
+	"scripts": {
+		"build": "slidev build",
+		"dev": "slidev --open",
+		"export": "slidev export"
+	},
+	"dependencies": {
+		"@slidev/cli": "^52.12.0",
+		"@slidev/theme-default": "latest"
+	},
+	"devDependencies": {
+		"playwright-chromium": "latest"
+	}
 }
