@@ -1,25 +1,25 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: cnpg-workshop
+  name: databases-intro
   namespace: openshift-gitops
 spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: https://github.com/cmarker0/cnpg-workshop.git
-        revision: HEAD
+        repoURL: https://github.com/cmarker0/databases-intro.git
+        revision: main
         directories:
           - path: development/*
   template:
     metadata:
       name: "{{.path.basename}}"
     spec:
-      project: cnpg-workshop
+      project: cnpg
       source:
-        repoURL: https://github.com/cmarker0/cnpg-workshop.git
-        targetRevision: HEAD
+        repoURL: https://github.com/cmarker0/databases-intro.git
+        targetRevision: main
         path: "{{.path.path}}"
       destination:
         server: https://kubernetes.default.svc
