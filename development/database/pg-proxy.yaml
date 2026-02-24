@@ -7,10 +7,10 @@ metadata:
   namespace: workshop-pg-cluster
 spec:
   containers:
-    - args:
-        - socat
-        - TCP-LISTEN:5432,fork,reuseaddr
-        - TCP:workshop-pg-cluster-rw:5432
+    - command:
+        - sh
+        - -c
+        - socat TCP-LISTEN:5432,fork,reuseaddr TCP:workshop-pg-cluster-rw:5432
       image: alpine/socat
       name: pg-proxy
       resources: {}
