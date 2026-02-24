@@ -20,7 +20,22 @@ spec:
             - sh
             - -c
             - socat TCP-LISTEN:5432,fork,reuseaddr TCP:workshop-pg-cluster-rw:5432
-          image: alpine/socat
+          image: alpine/socat:1.8.0.3
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+              protocol: TCP
           name: pg-proxy
-          resources: {}
-      dnsPolicy: ClusterFirst
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 32Mi
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+          readinessProbe:
+            tcpSocket:
+              port: 5432
