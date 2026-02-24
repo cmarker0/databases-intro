@@ -9,6 +9,8 @@ resources:
   - rw.pooler.yaml
   - backup.objectstore.yaml
   - restore.objectstore.yaml
+  - init-users.configmap.yaml
+  - init-users.job.yaml
 transformers:
   - |-
     apiVersion: builtin
