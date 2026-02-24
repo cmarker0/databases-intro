@@ -768,9 +768,9 @@ layout: default
 **1. Installer NuGet-pakker**
 
 ```bash
-dotnet add package Microsoft.EntityFrameworkCore
-dotnet add package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet add MiniReddit package Microsoft.EntityFrameworkCore
+dotnet add MiniReddit package Microsoft.EntityFrameworkCore.Design
+dotnet add MiniReddit package Npgsql.EntityFrameworkCore.PostgreSQL
 ```
 
 <div class="info-block green">
@@ -896,7 +896,7 @@ layout: default
 For å nå databasen fra din lokale maskin bruker du `oc port-forward` mot RW-pooleren:
 
 ```bash
-oc port-forward service/workshop-pg-pooler-rw 5432:5432 -n workshop-pg-cluster
+oc port-forward deployment/pg-proxy 5432:5432 -n workshop-pg-cluster
 ```
 
 <div class="mt-6">
@@ -926,7 +926,7 @@ layout: default
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=MiniRedditDb;Username=miniReddit;Password=localPassword123"
+    "DefaultConnection": "Host=127.0.0.1;Port=15432;Database=<REPLACE_WITH_NAME>;Username=app;Password=app;SSL Mode=Disable"
   }
 }
 ```
