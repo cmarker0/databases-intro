@@ -408,18 +408,18 @@ layout: center
 
 <div class="mt-8">
 
-I deres prosjekt har dere følgende tabeller `Post`, `Comment` og `User` Skriv SQL-spørringer som oppretter disse tabellene.
+I deres prosjekt har dere følgende tabeller `Post`, `Comment` og `Users` Skriv SQL-spørringer som oppretter disse tabellene.
 
 <div>
 
-| **Post**  | **Comment** | **User** |
-| --------- | ----------- | -------- |
-| Id        | Id          | Id       |
-| Content   | Content     | Name     |
-| CreatedAt | CreatedAt   |          |
-| Author    | Author      |          |
-| Title     | PostId      |          |
-| Comments  |             |          |
+| **Post**  | **Comment** | **Users** |
+| --------- | ----------- | --------- |
+| Id        | Id          | Id        |
+| Content   | Content     | Name      |
+| CreatedAt | CreatedAt   |           |
+| Author    | Author      |           |
+| Title     | PostId      |           |
+| Comments  |             |           |
 
 </div>
 </div>
@@ -431,7 +431,7 @@ layout: default
 # Løsningsforslag: Oppgave 1
 
 ```sql
-CREATE TABLE User (
+CREATE TABLE Users (
     Id        INTEGER       PRIMARY KEY,
     Name      TEXT          NOT NULL
 );
@@ -440,7 +440,7 @@ CREATE TABLE Post (
     Id        INTEGER       PRIMARY KEY,
     Content   TEXT          NOT NULL,
     CreatedAt DATE          NOT NULL,
-    Author    INTEGER       NOT NULL REFERENCES User(Id),
+    Author    INTEGER       NOT NULL REFERENCES Users(Id),
     Title     TEXT          NOT NULL
 );
 
@@ -448,7 +448,7 @@ CREATE TABLE Comment (
     Id        INTEGER       PRIMARY KEY,
     Content   TEXT          NOT NULL,
     CreatedAt DATE          NOT NULL,
-    Author    INTEGER       NOT NULL REFERENCES User(Id),
+    Author    INTEGER       NOT NULL REFERENCES Users(Id),
     PostId    INTEGER       NOT NULL REFERENCES Post(Id)
 );
 ```
@@ -710,7 +710,7 @@ layout: center
 
 <div class="mt-8">
 
-Bruk tabellene du opprettet i forrige oppgave (`Post`, `Comment`, `User`).
+Bruk tabellene du opprettet i forrige oppgave (`Post`, `Comment`, `Users`).
 
 Skriv en SQL-spørring som henter ut **alle poster skrevet av en bestemt bruker**, inkludert brukerens navn.
 
@@ -719,7 +719,7 @@ Skriv en SQL-spørring som henter ut **alle poster skrevet av en bestemt bruker*
 **💡 Tips:**
 
 - Bruk `SELECT` for å velge hvilke kolonner du vil ha med
-- Bruk `JOIN` for å koble `Post` og `User`
+- Bruk `JOIN` for å koble `Post` og `Users`
 - Bruk `WHERE` for å filtrere på en bestemt bruker
 
 </div>
@@ -738,10 +738,10 @@ SELECT
     Post.Title,
     Post.Content,
     Post.CreatedAt,
-    User.Name
+    Users.Name
 FROM Post
-JOIN User ON Post.Author = User.Id
-WHERE User.Name = 'Kari Nordmann';
+JOIN Users ON Post.Author = Users.Id
+WHERE Users.Name = 'Kari Nordmann';
 ```
 
 ---

@@ -3,7 +3,7 @@
 Tabellene du jobber med:
 
 ```sql
-CREATE TABLE User (
+CREATE TABLE Users (
     Id        INTEGER  PRIMARY KEY,
     Name      TEXT     NOT NULL
 );
@@ -13,14 +13,14 @@ CREATE TABLE Post (
     Title     TEXT     NOT NULL,
     Content   TEXT     NOT NULL,
     CreatedAt DATE     NOT NULL,
-    Author    INTEGER  NOT NULL REFERENCES User(Id)
+    Author    INTEGER  NOT NULL REFERENCES Users(Id)
 );
 
 CREATE TABLE Comment (
     Id        INTEGER  PRIMARY KEY,
     Content   TEXT     NOT NULL,
     CreatedAt DATE     NOT NULL,
-    Author    INTEGER  NOT NULL REFERENCES User(Id),
+    Author    INTEGER  NOT NULL REFERENCES Users(Id),
     PostId    INTEGER  NOT NULL REFERENCES Post(Id)
 );
 ```
@@ -33,7 +33,7 @@ CREATE TABLE Comment (
 
 **2.** Hent bare `Title` og `CreatedAt` fra alle poster.
 
-**3.** Hent alle brukere fra `User`-tabellen.
+**3.** Hent alle brukere fra `Users`-tabellen.
 
 **4.** Hent alle kommentarer skrevet etter 1. januar 2024.
 
