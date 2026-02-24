@@ -893,6 +893,34 @@ modelBuilder.Entity<Comment>(entity =>
 layout: default
 ---
 
+# Koble til databasen lokalt med port-forward
+
+For å nå databasen fra din lokale maskin bruker du `oc port-forward` mot RW-pooleren:
+
+```bash
+oc port-forward service/workshop-pg-pooler-rw 5432:5432 -n workshop-pg-cluster
+```
+
+<div class="mt-6">
+
+**Hva skjer her?**
+
+- `service/workshop-pg-pooler-rw` – tjenesten til PgBouncer RW-pooleren
+- `5432:5432` – videresender lokal port 5432 til port 5432 i clusteret
+- `-n workshop-pg-cluster` – namespacet der databasen kjører
+
+</div>
+
+<div class="info-block blue">
+
+💡 La terminalen med `port-forward` stå åpen mens du jobber. Applikasjonen din kobler da til `localhost:5432` som om databasen kjørte lokalt.
+
+</div>
+
+---
+layout: default
+---
+
 # Entity Framework: Konfigurasjon
 
 **3. Legg til connection string i `appsettings.json`**
