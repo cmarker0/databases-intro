@@ -7,6 +7,7 @@ metadata:
   namespace: workshop-pg-cluster
 spec:
   replicas: 1
+  revisionHistoryLimit: 0
   selector:
     matchLabels:
       run: pg-proxy
