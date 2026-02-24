@@ -5,7 +5,6 @@ resources:
   - db-admin.secret.yaml
   - db-user.secret.yaml
   - cluster.yaml
-  - ro.pooler.yaml
   - rw.pooler.yaml
   - backup.objectstore.yaml
   - restore.objectstore.yaml
