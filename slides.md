@@ -11,8 +11,6 @@ fonts:
   mono: JetBrains Mono
 ---
 
-<!-- markdownlint-disable-file MD025 MD003 MD022 MD024 MD033 MD034 MD036 -->
-
 Del 1:
 # Introduksjon til Databaser
 
