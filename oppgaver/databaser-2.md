@@ -42,6 +42,21 @@ Implementer `GetPosts()` slik at den returnerer alle poster fra databasen, sorte
 
 - Hint: `_context.Posts`, `.Include(...)`, `.OrderByDescending(...)`, `.ToList()`
 
+<details>
+<summary>🔑 Vis løsningsforslag</summary>
+
+```csharp
+public List<Post> GetPosts()
+{
+    return _context.Posts
+        .Include(p => p.Comments)
+        .OrderByDescending(p => p.CreatedAt)
+        .ToList();
+}
+```
+
+</details>
+
 ---
 
 ## Oppgave 2: Hent en post med ID
@@ -49,6 +64,21 @@ Implementer `GetPosts()` slik at den returnerer alle poster fra databasen, sorte
 Implementer `GetPostById(int postId)` slik at den returnerer posten med gitt ID. Returner `null` hvis posten ikke finnes. Inkluder kommentarene og forfatteren.
 
 - Hint: `.Include(...)`, `.FirstOrDefault(...)`
+
+<details>
+<summary>🔑 Vis løsningsforslag</summary>
+
+```csharp
+public Post? GetPostById(int postId)
+{
+    return _context.Posts
+        .Include(p => p.Comments)
+        .Include(p => p.Author)
+        .FirstOrDefault(p => p.Id == postId);
+}
+```
+
+</details>
 
 ---
 
@@ -58,6 +88,18 @@ Implementer `PostExists(int id)` slik at den returnerer `true` hvis det finnes e
 
 - Hint: `.Any(...)`
 
+<details>
+<summary>🔑 Vis løsningsforslag</summary>
+
+```csharp
+public bool PostExists(int id)
+{
+    return _context.Posts.Any(p => p.Id == id);
+}
+```
+
+</details>
+
 ---
 
 ## Oppgave 4: Legg til en post
@@ -66,6 +108,20 @@ Implementer `AddPost(Post post)` slik at den lagrer en ny post i databasen. Sett
 
 - Hint: `_context.Posts.Add(...)`, `_context.SaveChanges()`
 
+<details>
+<summary>🔑 Vis løsningsforslag</summary>
+
+```csharp
+public void AddPost(Post post)
+{
+    post.CreatedAt = DateTime.UtcNow;
+    _context.Posts.Add(post);
+    _context.SaveChanges();
+}
+```
+
+</details>
+
 ---
 
 ## Oppgave 5: Legg til en kommentar
@@ -73,6 +129,20 @@ Implementer `AddPost(Post post)` slik at den lagrer en ny post i databasen. Sett
 Implementer `AddComment(Comment comment)` slik at den lagrer en ny kommentar i databasen. Sett `CreatedAt` til `DateTime.UtcNow` før du lagrer.
 
 - Hint: `_context.Comments.Add(...)`, `_context.SaveChanges()`
+
+<details>
+<summary>🔑 Vis løsningsforslag</summary>
+
+```csharp
+public void AddComment(Comment comment)
+{
+    comment.CreatedAt = DateTime.UtcNow;
+    _context.Comments.Add(comment);
+    _context.SaveChanges();
+}
+```
+
+</details>
 
 ---
 
@@ -86,6 +156,25 @@ Implementer `GetOrCreateUser(string objectId, string name)` slik at den:
 
 - Hint: `_context.Users.FirstOrDefault(...)`, `_context.Users.Add(...)`, `_context.SaveChanges()`
 
+<details>
+<summary>🔑 Vis løsningsforslag</summary>
+
+```csharp
+public User GetOrCreateUser(string id, string name)
+{
+    var user = _context.Users.FirstOrDefault(u => u.Id == id);
+    if (user == null)
+    {
+        user = new User { Id = id, Name = name };
+        _context.Users.Add(user);
+        _context.SaveChanges();
+    }
+    return user;
+}
+```
+
+</details>
+
 ---
 
 ## Oppgave 7: Oppdater en post
@@ -94,6 +183,24 @@ Implementer `UpdatePost(int postId, UpdatePostDTO updatedPost)` slik at den oppd
 
 - Hint: Hent posten med `.FirstOrDefault(...)`, oppdater feltene direkte, og kall `_context.SaveChanges()`
 
+<details>
+<summary>🔑 Vis løsningsforslag</summary>
+
+```csharp
+public void UpdatePost(int postId, UpdatePostDTO updatedPost)
+{
+    var post = _context.Posts.FirstOrDefault(p => p.Id == postId);
+    if (post != null)
+    {
+        post.Title = updatedPost.Title;
+        post.Content = updatedPost.Content;
+        _context.SaveChanges();
+    }
+}
+```
+
+</details>
+
 ---
 
 ## Oppgave 8: Slett en post
@@ -101,3 +208,20 @@ Implementer `UpdatePost(int postId, UpdatePostDTO updatedPost)` slik at den oppd
 Implementer `DeletePost(int postId)` slik at den sletter posten med gitt ID. Gjor ingenting hvis posten ikke finnes.
 
 - Hint: `.FirstOrDefault(...)`, `_context.Posts.Remove(...)`, `_context.SaveChanges()`
+
+<details>
+<summary>🔑 Vis løsningsforslag</summary>
+
+```csharp
+public void DeletePost(int postId)
+{
+    var post = _context.Posts.FirstOrDefault(p => p.Id == postId);
+    if (post != null)
+    {
+        _context.Posts.Remove(post);
+        _context.SaveChanges();
+    }
+}
+```
+
+</details>
