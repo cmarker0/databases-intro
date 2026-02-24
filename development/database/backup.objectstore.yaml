@@ -1,0 +1,27 @@
+apiVersion: barmancloud.cnpg.io/v1
+kind: ObjectStore
+metadata:
+  name: workshop-backup-azure-object-store
+spec:
+  retentionPolicy: "1d"
+  configuration:
+    azureCredentials:
+      storageAccount:
+        name: azure-storage-account-credentials
+        key: account_name
+      storageKey:
+        name: azure-storage-account-credentials
+        key: account_key
+    # Change the destinationPath to your own Azure Blob Storage URL
+    # When doing restore operation. Increment version number (e.g., v3 -> v4)
+    # This needs to be an empty directory
+    destinationPath: https://cnpgworkshop.blob.core.windows.net/cnpg-workshop-pg-backup/v4
+    wal:
+      compression: gzip
+  instanceSidecarConfiguration:
+    resources:
+      requests:
+        memory: 300Mi
+        cpu: 100m
+      limits:
+        memory: 1000Mi

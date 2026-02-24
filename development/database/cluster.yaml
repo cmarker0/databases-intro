@@ -1,0 +1,59 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: workshop-pg-cluster
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:18.1-system-trixie # primary and replica pg instance image can also be configured through ImageCatalog
+  affinity:
+    enablePodAntiAffinity: true
+    # Ideally we would like to use a topologyKey that is more specific than kubernetes.io/hostname, for example topology.kubernetes.io/zone, for better availability
+    # but since this is a demo and we are running on minikube we use kubernetes.io/hostname to ensure that the pods do not run on the same node
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: required
+  enableSuperuserAccess: true
+  superuserSecret:
+    name: admin-user
+  bootstrap:
+    # initdb:
+    #   database: app # this is the default database that will be created when the cluster is initialized, you can change it to whatever you want
+    #   owner: app
+    #   secret:
+    #     name: app-user
+    # Uncomment if you want to restore from backup and comment out the initdb section above
+    recovery:
+      database: app
+      owner: app
+      secret:
+        name: app-user
+      source: clusterBackup
+      recoveryTarget:
+        backupID: 20260224T121047 # BackupID you want to restore from
+        # targetTime: "2026-02-24T12:13:40+00:00" # Format: RFC3339, YYYY-MM-DDTHH:MM:SS+00:00
+  externalClusters:
+    - name: clusterBackup
+      plugin:
+        name: barman-cloud.cloudnative-pg.io
+        parameters:
+          barmanObjectName: workshop-restore-azure-object-store # reference to the restore ObjectStore resource
+          serverName: workshop-pg-cluster
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: workshop-backup-azure-object-store # reference to the backup ObjectStore resource
+  # Should be adjusted based on the workload
+  resources:
+    requests:
+      memory: 100Mi
+      cpu: 200m
+    limits:
+      memory: 300Mi
+  storage:
+    storageClass: kubevirt-csi-infra-default
+    size: 2Gi
+  walStorage:
+    storageClass: kubevirt-csi-infra-default
+    size: 2Gi
+  monitoring:
+    enablePodMonitor: false # Disabled as we have a custom PodMonitor
